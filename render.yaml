@@ -6,7 +6,9 @@ services:
     runtime: docker
     rootDir: backend
     dockerfilePath: ./Dockerfile
-    plan: starter # free (512 MB) is too small for the embedding model
+    # Free: 512 MB RAM, sleeps after 15 min idle. Measured peak ~467 MB, so large PDF
+    # uploads to /analyze can run out of memory - move to starter if that happens.
+    plan: free
     region: singapore
     healthCheckPath: /health
     envVars:
