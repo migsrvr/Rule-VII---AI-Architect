@@ -1,6 +1,6 @@
 """
 Vision Engine Service
-Handles image analysis using Groq's Llama 3.2 Vision model.
+Handles image analysis using Groq's Qwen 3.8 multimodal model.
 """
 import base64
 import logging
@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 class VisionEngine:
     def __init__(self):
         self.client = Groq(api_key=settings.GROQ_API_KEY)
-        # Using Llama 4 Scout Vision (Newest multimodal model)
-        self.model = "meta-llama/llama-4-scout-17b-16e-instruct" 
+        # Qwen 3.8 (multimodal) - llama-4-scout was retired by Groq
+        self.model = "qwen/qwen3.8-27b"
 
     def analyze_image(self, image_bytes: bytes, prompt: str = "") -> str:
         """

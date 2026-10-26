@@ -127,6 +127,9 @@ MODE_MAX_TOKENS = {
     "deep_thinking": 2500,   # Future: comprehensive
 }
 
+# Extra tokens for the model's hidden reasoning, on top of the answer budget above
+REASONING_TOKEN_HEADROOM = 1024
+
 # Legacy default prompt (fallback)
 SYSTEM_PROMPT = MODE_PROMPTS["quick_answer"]
 
@@ -142,7 +145,7 @@ class LLMEngine:
         self.api_key = settings.GROQ_API_KEY
         self.client = Groq(api_key=self.api_key)
         self.rag_engine = RAGEngine()
-        self.model = "llama-3.3-70b-versatile"  # Updated (3.1 deprecated)
+        self.model = "openai/gpt-oss-120b"  # llama-3.3-70b-versatile was retired by Groq
         
         if settings.DEBUG:
             logger.info(f"LLM Engine initialized with model: {self.model}")
@@ -196,7 +199,10 @@ class LLMEngine:
                     {"role": "user", "content": user_message}
                 ],
                 temperature=temperature,
-                max_tokens=max_tokens
+                # gpt-oss is a reasoning model: hidden reasoning counts against max_tokens,
+                # so keep it low and add headroom or the answer comes back empty/truncated
+                max_tokens=max_tokens + REASONING_TOKEN_HEADROOM,
+                extra_body={"reasoning_effort": "low"}
             )
             
             ai_text = response.choices[0].message.content
