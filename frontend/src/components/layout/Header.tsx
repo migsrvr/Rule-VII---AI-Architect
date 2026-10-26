@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Bell, Scale, User, Settings, LogOut, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from '@/lib/supabase';
+import { API_URL } from "@/lib/api-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 
@@ -35,7 +36,7 @@ export default function Header() {
                 const token = session.access_token;
 
                 // 2. USE THE TOKEN TO CALL BACKEND
-                const response = await fetch("http://127.0.0.1:8000/api/v1/users/me", {
+                const response = await fetch(`${API_URL}/api/v1/users/me`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,

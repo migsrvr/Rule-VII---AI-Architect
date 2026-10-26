@@ -28,3 +28,6 @@ htmlcov/
 # Misc
 *.log
 .env.local
+
+# Secrets - pass at runtime, never bake into the image
+.env

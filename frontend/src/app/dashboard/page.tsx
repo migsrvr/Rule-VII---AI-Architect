@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { supabase } from '@/lib/supabase';
+import { API_URL } from "@/lib/api-client";
 import {
     ArrowUpRight,
     CheckCircle2,
@@ -68,7 +69,7 @@ export default function DashboardPage() {
                 return;
             }
 
-            const res = await fetch("http://localhost:8000/api/v1/projects/", {
+            const res = await fetch(`${API_URL}/api/v1/projects/`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${session.access_token}`,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Scale, ArrowLeft, X, Menu, Plus, Loader2, Trash2, MoreHorizontal, Star, Search, FolderOpen, RefreshCw, Check } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/resizable";
 
 // API Client
-import { apiClient } from "@/lib/api-client";
+import { apiClient, API_URL } from "@/lib/api-client";
 import { ChatResponse, ChatHistoryItem } from "@/lib/api-types";
 import { supabase } from "@/lib/supabase";
 
@@ -34,7 +34,7 @@ import RevisionProposalMessage from "@/components/workspace/RevisionProposalMess
 import { DocumentSection, DraftProposal, WorkspaceMessage } from "@/types/workspace";
 import { RevisionProposal } from "@/types/revision";
 
-export default function WorkspacePage() {
+function WorkspacePage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -107,7 +107,7 @@ export default function WorkspacePage() {
         setIsLoadingProject(true);
         try {
             // 1. Check for existing session for this project
-            const sessionRes = await fetch(`http://localhost:8000/api/v1/chat/project/${projectId}/session`, {
+            const sessionRes = await fetch(`${API_URL}/api/v1/chat/project/${projectId}/session`, {
                 headers: { "Authorization": `Bearer ${await getToken()}` }
             });
             const sessionData = await sessionRes.json();
@@ -118,7 +118,7 @@ export default function WorkspacePage() {
             }
 
             // 2. Fetch project details
-            const projectRes = await fetch(`http://localhost:8000/api/v1/projects/`, {
+            const projectRes = await fetch(`${API_URL}/api/v1/projects/`, {
                 headers: { "Authorization": `Bearer ${await getToken()}` }
             });
             const projects = await projectRes.json();
@@ -126,7 +126,7 @@ export default function WorkspacePage() {
 
             if (project) {
                 // 3. Fetch file count
-                const filesRes = await fetch(`http://localhost:8000/api/v1/projects/${projectId}/files`, {
+                const filesRes = await fetch(`${API_URL}/api/v1/projects/${projectId}/files`, {
                     headers: { "Authorization": `Bearer ${await getToken()}` }
                 });
                 const files = await filesRes.json();
@@ -322,7 +322,7 @@ FORMATTING RULES:
 Provide only the new/revised content:`;
 
             const token = await getToken();
-            const response = await fetch('http://localhost:8000/api/v1/chat/', {
+            const response = await fetch(`${API_URL}/api/v1/chat/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -984,5 +984,14 @@ Provide only the new/revised content:`;
                 isLoading={isRevisionLoading}
             />
         </div>
+    );
+}
+
+// useSearchParams() needs a Suspense boundary for the production build
+export default function WorkspacePageWrapper() {
+    return (
+        <Suspense fallback={null}>
+            <WorkspacePage />
+        </Suspense>
     );
 }

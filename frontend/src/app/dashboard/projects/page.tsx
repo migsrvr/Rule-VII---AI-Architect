@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 // Use shared supabase client to avoid multiple instances
 import { supabase } from '@/lib/supabase';
+import { API_URL } from "@/lib/api-client";
 import {
     FolderPlus,
     MoreHorizontal,
@@ -96,7 +97,7 @@ export default function ProjectsPage() {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) return;
 
-            const res = await fetch("http://localhost:8000/api/v1/projects/", {
+            const res = await fetch(`${API_URL}/api/v1/projects/`, {
                 headers: { "Authorization": `Bearer ${session.access_token}` }
             });
 
@@ -210,8 +211,8 @@ export default function ProjectsPage() {
 
             // DETERMINE IF CREATING OR UPDATING
             const url = editingProject
-                ? `http://localhost:8000/api/v1/projects/${editingProject.id}` // PUT URL
-                : "http://localhost:8000/api/v1/projects/"; // POST URL
+                ? `${API_URL}/api/v1/projects/${editingProject.id}` // PUT URL
+                : `${API_URL}/api/v1/projects/`; // POST URL
 
             const method = editingProject ? "PUT" : "POST";
 
@@ -237,7 +238,7 @@ export default function ProjectsPage() {
                     formData.append('file', file);
 
                     try {
-                        await fetch(`http://localhost:8000/api/v1/projects/${projectId}/files`, {
+                        await fetch(`${API_URL}/api/v1/projects/${projectId}/files`, {
                             method: 'POST',
                             headers: {
                                 "Authorization": `Bearer ${session.access_token}`,
@@ -270,7 +271,7 @@ export default function ProjectsPage() {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) return;
 
-            const res = await fetch(`http://localhost:8000/api/v1/projects/${id}`, {
+            const res = await fetch(`${API_URL}/api/v1/projects/${id}`, {
                 method: "DELETE",
                 headers: { "Authorization": `Bearer ${session.access_token}` }
             });
@@ -289,7 +290,7 @@ export default function ProjectsPage() {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) return;
 
-            const res = await fetch(`http://localhost:8000/api/v1/projects/${id}`, {
+            const res = await fetch(`${API_URL}/api/v1/projects/${id}`, {
                 method: "PUT",
                 headers: {
                     "Authorization": `Bearer ${session.access_token}`,

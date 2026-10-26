@@ -1,0 +1,24 @@
+# Render Blueprint - backend API (frontend is on Vercel)
+# Dashboard: New > Blueprint > pick this repo. Secrets marked sync:false are prompted on first deploy.
+services:
+  - type: web
+    name: rule-vii-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: starter # free (512 MB) is too small for the embedding model
+    region: singapore
+    healthCheckPath: /health
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: FRONTEND_URL
+        sync: false # set to the Vercel production URL
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false

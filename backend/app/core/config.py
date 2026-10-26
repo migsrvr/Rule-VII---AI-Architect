@@ -11,8 +11,8 @@ class Settings(BaseSettings):
 
     # AI Services
     GROQ_API_KEY: str
-    HUGGINGFACE_TOKEN: str
-    RUNPOD_API_KEY: str
+    HUGGINGFACE_TOKEN: Optional[str] = None  # Not used yet
+    RUNPOD_API_KEY: Optional[str] = None  # Not used yet
 
     # App Config
     API_V1_STR: str = "/api/v1"

@@ -77,7 +77,7 @@ Rule-VII---AI-Architect/
 
 ### Prerequisites
 
-- Python 3.12+
+- Python 3.11+
 - Node.js 20+
 - Docker & Docker Compose
 - Supabase account (free tier)
@@ -89,13 +89,8 @@ Rule-VII---AI-Architect/
 git clone <repo>
 cd Rule-VII---AI-Architect
 
-# Backend environment
-cp backend/.env.example backend/.env
-# Edit backend/.env with your keys
-
-# Frontend environment
-cp frontend/.env.local.example frontend/.env.local
-# Edit frontend/.env.local with your keys
+# See .env.example (root) for every variable, split by service
+# Create backend/.env and frontend/.env.local from it
 ```
 
 ### 2. Required Environment Variables
@@ -103,10 +98,11 @@ cp frontend/.env.local.example frontend/.env.local
 **Backend (.env)**:
 ```env
 SUPABASE_URL=your-supabase-url
-SUPABASE_KEY=your-service-role-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_JWT_SECRET=your-supabase-jwt-secret
 GROQ_API_KEY=your-groq-api-key
-DEBUG=true
-FRONTEND_URL=http://localhost:3000
+DEBUG=true                            # False in production
+FRONTEND_URL=http://localhost:3000    # Your Vercel domain in production
 ```
 
 **Frontend (.env.local)**:
