@@ -1,0 +1,4 @@
+.env*
+node_modules
+.next
+REVISION_HANDLERS_REFERENCE.tsx
